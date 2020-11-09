@@ -1,3 +1,5 @@
+import requests
+from bs4 import BeautifulSoup
      # TODO: Добавить проверку на корректность ввода гостов.
           # TODO: обрезать буквы и "-год"
      # TODO: сделать поиск по HV
@@ -127,9 +129,45 @@ def gost2din():
                print("== " + str(total_list_of_standarts[zero_count_standarts]))
                zero_count_standarts += 1
 
+def name_from_site():
+
+    search_id = "din912"
+
+    url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
+    r = requests.get(url)
+    with open('search.html', 'w') as output_file:
+        output_file.write(r.text)
+
+    with open("search.html", "r") as f:
+        contents = f.read()
+     
+        soup = BeautifulSoup(contents, 'lxml')
+        
+        
+        #soup_find = soup.find(attrs={"class" : "h catalogue_descr"})
+        with open ('parser.xml', 'w') as output_file:
+            soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
+            #print(soup_find)
+            output_file.write(soup_find)
+
+        with open ('final_filter.html', 'w') as output_file:
+            final_filter = str(soup.find_all(attrs={"href" : "search_id"}))
+            print(final_filter)
+            output_file.write(final_filter)
+
+        #   рабочий кусок кода, который выводит первое сообщение с сайта после поиска
+        #soup_find = soup.find(attrs={"class" : "h catalogue_descr"})
+        #print(soup_find)
+
+        #print(soup_find.text)
+
+
+
 # запуск скрипта
 def start():
      print("Преобразование гостов в din".upper())
      gost2din()
+     name_from_site()
+
 
 start()
