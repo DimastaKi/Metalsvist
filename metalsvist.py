@@ -1,21 +1,36 @@
 import requests
 from bs4 import BeautifulSoup
+    # =============================================================
+     # МОДУЛЬ 1: Гост2Дин
      # TODO: Добавить проверку на корректность ввода гостов.
           # TODO: обрезать буквы и "-год"
-     # TODO: сделать поиск по HV
-     # TODO: сделать поиск по дину по сайту
-     # TODO: сделать расчет химанкера
+
+     # Модуль 2:
      # TODO: прикрутить название для динов
 
+     # МОДУЛЬ 3:
+     # TODO: сделать поиск по HV
 
-# преобразование госта в дин
+     # МОДУЛЬ 4:
+     # TODO: сделать поиск по дину по сайту
+
+     # МОДУЛЬ 5:
+     # TODO: сделать расчет химанкера
+
+    # =============================================================
+
+# МОДУЛЬ 1: преобразование госта в дин
 def gost2din():
-     gost = input("Введите номер ГОСТа для поиска аналогов в DIN/ISO: ")
-     intut_gost = gost
+    gost = input("Введите только номер ГОСТа: ")
+    gost = (gost.replace(" ", ""))
+    gost = (gost.replace("гост" and "ГОСТ", ""))
+    #проверка на валидность ввода
 
 
-     # Словарь соотношений ГОСТа в DIN + ISO
-     dic_for_standarts = {
+    intut_gost = gost
+
+    # Словарь соотношений ГОСТа в DIN + ISO
+    dic_for_standarts = {
          "397" : "DIN 94, ISO 1234",
          "1144" : "DIN 96, DIN 7981, ISO 7049",
          "1145" : "DIN 7982, DIN 97, ISO 7050",
@@ -33,21 +48,21 @@ def gost2din():
          "3033" : "DIN 444",
          "3057" : "DIN 2093",
          "3070" : "DIN 3060",
-         "3128" : "DIN 7, DIN 6325 ISO 2338",
+         "3128" : "DIN 7, DIN 6325, ISO 2338",
          "3129" : "DIN 1, ISO 2339",
-         "4751" : "DIN 580 ISO 3266",
+         "4751" : "DIN 580, ISO 3266",
          "5915" : "DIN 555, DIN 934, ISO 4034, ISO 4032, ISO 8673",
          "5916" : "DIN 439, DIN 936, ISO 4035, ISO 4036, ISO 8675",
-         "5918" : "DIN 935 ISO 7035, ISO 7036, ISO 7037",
-         "5919" : "DIN 937 ISO 7038",
+         "5918" : "DIN 935, ISO 7035, ISO 7036, ISO 7037",
+         "5919" : "DIN 937, ISO 7038",
          "5927" : "DIN 555, DIN 934, ISO 4032, ISO 4034, ISO 8673",
          "5932" : "DIN 935, DIN 937, ISO 7035, ISO 7036, ISO 7037, ISO 7038",
          "6393" : "DIN 1816",
-         "6402" : "DIN 127" ,
+         "6402" : "DIN 127",
          "6958" : "DIN 440, DIN 9021, ISO 7094, ISO 7093-1, ISO 7093-2",
          "7798" : "DIN 931, DIN 933, ISO 4014",
          "7801" : "DIN 607",
-         "7802" : "DIN 603 ISO 8677",
+         "7802" : "DIN 603, ISO 8677",
          '7805' : "DIN 931, DIN 933, ISO 4014",
          "8878" : "DIN 914, ISO 4027",
          "9464" : "DIN 7978, ISO 8736",
@@ -60,7 +75,7 @@ def gost2din():
          "10338" : "DIN 7964",
          "10450" : "DIN 433, ISO 7092",
          "10462" : "DIN 6797, DIN 6798",
-         "10463" : "DIN 6798 ",
+         "10463" : "DIN 6798",
          "10464" : "DIN 6797, DIN 6798",
          "10619" : "DIN 7982, ISO 7050",
          "10620" : "DIN 7983, ISO 7051",
@@ -93,7 +108,7 @@ def gost2din():
          "17474" : "DIN 964, DIN 966, ISO 2010, ISO 7047",
          "17475" : "DIN 963, DIN 965, ISO 2009, ISO 7046-1, ISO 7046-2",
          "17673" : "DIN 605",
-         "18746" : "DIN 427 ISO 2342",
+         "18746" : "DIN 427, ISO 2342",
          "22033" : "DIN 938",
          "22034" : "DIN 939",
          "22035" : "DIN 939",
@@ -104,70 +119,81 @@ def gost2din():
          "23360" : "DIN 6885",
          "24071" : "DIN 6888, ISO 3912",
          "28964" : "DIN 916, ISO 4029",
-     }
+    }
 
-     output_from_dic = (dic_for_standarts.get(intut_gost))
+    # проверка гостов в динах
+    output_from_dic = (dic_for_standarts.get(intut_gost))
 
-     # Если проверка вывела None - выводит ошибку, иначе - значение словаря, т.к. есть аналог в дине
-     if output_from_dic == None:
-          print("Не корректно введенный номер ГОСТа или нет аналогов в современных стандартах")
-     else:
-          # проверка на соотношение гост == дин
-          output_from_dic = (dic_for_standarts.get(intut_gost).replace(", ", ","))
+    # Если проверка вывела None - выводит ошибку, иначе - значение словаря, т.к. есть аналог в дине
+    if output_from_dic == None:
+         print("Не корректно введенный номер ГОСТа или нет аналогов в современных стандартах")
+    else:
+        # проверка на соотношение гост == дин
+        output_from_dic = (dic_for_standarts.get(intut_gost).replace(", ", ","))
 
-          # преобразование строки в список
-          total_list_of_standarts = list(output_from_dic.split(","))
-          
-          # проверка к-во динов и печать каждого отдельного дина с новой строки
-          zero_count_standarts = 0
-          count_of_list_of_standart = (len(total_list_of_standarts) - 1)
-          
-          print("= Аналог(и) в современном стандарте: ")
+        # преобразование строки в список
+        total_list_of_standarts = list(output_from_dic.split(","))
+        
+        # проверка к-во динов и печать каждого отдельного дина с новой строки
+        zero_count_standarts = 0
+        count_of_list_of_standart = (len(total_list_of_standarts) - 1)
+        
+        print("= Аналог(и) в современном стандарте: ")
      
-          # выполняется перебор найденных стандартов при сравнении гостов и динов и выводится в виде столбика найденные дины
-          while count_of_list_of_standart >= zero_count_standarts:
-               print("== " + str(total_list_of_standarts[zero_count_standarts]))
-               zero_count_standarts += 1
+        # выполняется перебор найденных стандартов при сравнении гостов и динов и выводится в виде столбика найденные дины
+        while count_of_list_of_standart >= zero_count_standarts:
+             print("== " + str(total_list_of_standarts[zero_count_standarts]))
+             zero_count_standarts += 1
 
+# МОДУЛЬ 2: отображдение имени через парсинг с сайта
 def name_from_site():
-
+    print("\n" + "\t" + "названии товара".upper())
+    #   парсинг информации из сайта по поиску
     search_id = "din912"
-
     url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
     r = requests.get(url)
+
+    # Запись полученного парсинга
     with open('search.html', 'w') as output_file:
         output_file.write(r.text)
 
+    # Создание супа для фильтрации по названии товара и его маркировка
     with open("search.html", "r") as f:
         contents = f.read()
-     
         soup = BeautifulSoup(contents, 'lxml')
+
+    # фильт и запись полученного фильтра
+    with open ('parser.xml', 'w') as output_file:
+        soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
+        soup_from_perser = BeautifulSoup(soup_find, 'lxml')
+        output_file.write(soup_find)
+
+    # второй, боллее приближенный фильтр
+    with open ('parser.xml', 'r') as output_filter_file:
+        soup_final_find = str(soup_from_perser.find(attrs={"class" : "h2"}))
+
+        # создание фальла полученного после последнего фильтра
+        with open ('final_filter.xml', 'w') as final_filter:
+            final_filter.write(soup_final_find)
+            print("write final_filter is ok")
+        print(soup_final_find)
         
-        
-        #soup_find = soup.find(attrs={"class" : "h catalogue_descr"})
-        with open ('parser.xml', 'w') as output_file:
-            soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
-            #print(soup_find)
-            output_file.write(soup_find)
-
-        with open ('final_filter.html', 'w') as output_file:
-            final_filter = str(soup.find_all(attrs={"href" : "search_id"}))
-            print(final_filter)
-            output_file.write(final_filter)
-
-        #   рабочий кусок кода, который выводит первое сообщение с сайта после поиска
-        #soup_find = soup.find(attrs={"class" : "h catalogue_descr"})
-        #print(soup_find)
-
-        #print(soup_find.text)
 
 
 
 # запуск скрипта
 def start():
-     print("Преобразование гостов в din".upper())
+
+     print("\n" + "\t" + "Преобразование гостов в din".upper())
+     
+     # МОДУЛЬ 1: гост2дин
      gost2din()
-     name_from_site()
+     
+     # МОДУЛЬ 2: поиска названия товара через металвис
+     #name_from_site()
+
+     # включить для циклического выполнения
+     #start()
 
 
 start()
