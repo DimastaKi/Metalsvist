@@ -19,21 +19,8 @@
 
     # =============================================================
 
-# МОДУЛЬ 1: преобразование госта в дин
+# МОДУЛЬ 1: преобразование госта в дин\
 def gost2din():
-    gost = input("Введите только номер ГОСТа: ")
-    
-    #проверка на валидность ввода
-    gost = (gost.replace(" ", ""))
-    gost = (gost.strip())
-    gost = (gost.lower())
-    gost = (gost.replace("гост", ""))
-
-    
-
-
-    intut_gost = gost
-
     # Словарь соотношений ГОСТа в DIN + ISO
     dic_for_standarts = {
          "397" : "DIN 94, ISO 1234",
@@ -126,15 +113,27 @@ def gost2din():
          "28964" : "DIN 916, ISO 4029",
     }
 
+    gost = input("Введите только номер ГОСТа: ")
+    
+    #проверка на валидность ввода
+    temp_keys = ""
+    get_keys = ""
+    
+    for keys in dic_for_standarts:
+        temp_keys = keys
+        search_gost = gost.find(temp_keys)
+        if search_gost >= 0:
+            get_keys = temp_keys
+      
     # проверка гостов в динах
-    output_from_dic = (dic_for_standarts.get(intut_gost))
+    output_from_dic = (dic_for_standarts.get(get_keys))
 
     # Если проверка вывела None - выводит ошибку, иначе - значение словаря, т.к. есть аналог в дине
     if output_from_dic == None:
-         print("Не корректно введенный номер ГОСТа или нет аналогов в современных стандартах")
+         print("Нет аналогов в современных стандартах")
     else:
         # проверка на соотношение гост == дин
-        output_from_dic = (dic_for_standarts.get(intut_gost).replace(", ", ","))
+        output_from_dic = (dic_for_standarts.get(get_keys).replace(", ", ","))
 
         # преобразование строки в список
         total_list_of_standarts = list(output_from_dic.split(","))
@@ -143,7 +142,7 @@ def gost2din():
         zero_count_standarts = 0
         count_of_list_of_standart = (len(total_list_of_standarts) - 1)
         
-        print("= Аналог(и) в современном стандарте: ")
+        print("= Аналог(и) " + str(get_keys) + ": ")
      
         # выполняется перебор найденных стандартов при сравнении гостов и динов и выводится в виде столбика найденные дины
         while count_of_list_of_standart >= zero_count_standarts:
