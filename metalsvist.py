@@ -186,30 +186,36 @@ def name_from_site():
         
 # расчитывает HV крепеж по заданной толщине пакета        
 def hv():
-
     
     diameter = "12"
+    hv_long = 0
+    client_long = 15
     
+    dic_hv_diameter_M12 = {
+    "30" : "6,10",
+    "35" : "11,15",
+    "40" : "16,20",
     
-    dic_hv = {
-    "12" : "6,10",
     }
-    diametr_to_list = list(dic_hv.get(diameter).split(","))
-    diameter = diameter.split(",")
-    print(diametr_to_list)
-    print(type(diametr_to_list))
+    #создание листа из словаря
+    diametr_to_list = list(dic_hv_diameter_M12.get(diameter).split(","))
+    #diameter = diameter.split(",")
+    
+    # создание размеров: начальный, конечный, рекомендуемая длинна болта
     start_l = (diametr_to_list[0])
     start_l = int(start_l) - 1 
-    print("start:" + str(type(start_l)) )
     finish_l = (diametr_to_list[1])
     finish_l = int(finish_l)
+
     
     total_long = 0
     
     while start_l < finish_l:
+
         start_l += 1
         total_long = start_l
         print (total_long)
+        
         
 # запуск скрипта
 def start():
