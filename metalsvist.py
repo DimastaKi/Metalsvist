@@ -2,7 +2,6 @@
 #from bs4 import BeautifulSoup
     # =============================================================
      # МОДУЛЬ 1: Гост2Дин
-        
 
      # Модуль 2:
      # TODO: прикрутить название для динов
@@ -185,20 +184,44 @@ def name_from_site():
             print("write final_filter is ok")
         print(soup_final_find)
         
+# расчитывает HV крепеж по заданной толщине пакета        
+def hv():
 
-
-
+    
+    diameter = "12"
+    
+    
+    dic_hv = {
+    "12" : "6,10",
+    }
+    diametr_to_list = list(dic_hv.get(diameter).split(","))
+    diameter = diameter.split(",")
+    print(diametr_to_list)
+    print(type(diametr_to_list))
+    start_l = (diametr_to_list[0])
+    start_l = int(start_l) - 1 
+    print("start:" + str(type(start_l)) )
+    finish_l = (diametr_to_list[1])
+    finish_l = int(finish_l)
+    
+    total_long = 0
+    
+    while start_l < finish_l:
+        start_l += 1
+        total_long = start_l
+        print (total_long)
+        
 # запуск скрипта
 def start():
      
      # МОДУЛЬ 1: гост2дин
-     gost2din()
-     
+     #gost2din()
+     hv()
      # МОДУЛЬ 2: поиска названия товара через металвис
      #name_from_site()
 
      # включить для циклического выполнения
-     start()
+     #start()
 
 
 start()
