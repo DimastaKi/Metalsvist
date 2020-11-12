@@ -1,5 +1,5 @@
-import requests
-from bs4 import BeautifulSoup
+#import requests
+#from bs4 import BeautifulSoup
     # =============================================================
      # МОДУЛЬ 1: Гост2Дин
      # TODO: Добавить проверку на корректность ввода гостов.
@@ -22,9 +22,14 @@ from bs4 import BeautifulSoup
 # МОДУЛЬ 1: преобразование госта в дин
 def gost2din():
     gost = input("Введите только номер ГОСТа: ")
-    gost = (gost.replace(" ", ""))
-    gost = (gost.replace("гост" and "ГОСТ", ""))
+    
     #проверка на валидность ввода
+    gost = (gost.replace(" ", ""))
+    gost = (gost.strip())
+    gost = (gost.lower())
+    gost = (gost.replace("гост", ""))
+
+    
 
 
     intut_gost = gost
