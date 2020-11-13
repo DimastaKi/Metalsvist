@@ -20,7 +20,7 @@
 # МОДУЛЬ 1: преобразование госта в дин
 def gost2din():
 
-    print("\n" + "\t" + "Преобразование гостов в din".upper())
+    print("\n" + "Преобразование гостов в din".upper())
 
     # Словарь соотношений ГОСТа в DIN + ISO
     dic_for_standarts = {
@@ -150,6 +150,7 @@ def gost2din():
         while count_of_list_of_standart >= zero_count_standarts:
              print("== " + str(total_list_of_standarts[zero_count_standarts]))
              zero_count_standarts += 1
+        start()
 
 # МОДУЛЬ 2: отображдение имени через парсинг с сайта
 def name_from_site():
@@ -219,15 +220,23 @@ def hv():
         
 # запуск скрипта
 def start():
+     print("\n============================== \n\nGost2DIN: 1 ")
+     print("HV: 2 ")
+     module_start = input("Выберите значение: ")
      
-     # МОДУЛЬ 1: гост2дин
-     #gost2din()
-     hv()
-     # МОДУЛЬ 2: поиска названия товара через металвис
-     #name_from_site()
-
-     # включить для циклического выполнения
-     #start()
+     if module_start == "1":
+        print("\n==============================")
+        gost2din()
+        
+     elif module_start == "2":
+        print("\n==============================")
+        hv()
+        
+     else:
+        print("попробуй снова...")
+        start()
+     
+     start()
 
 
 start()
