@@ -1,10 +1,16 @@
-#import requests
-#from bs4 import BeautifulSoup
+import os
+import sys
+import requests
+from bs4 import BeautifulSoup
+
+def todo_list():
     # =============================================================
      # МОДУЛЬ 1: Гост2Дин
 
      # Модуль 2:
      # TODO: прикрутить название для динов
+     # TODO: оптимизация: сзделать файл, в который будет записывать значение название дина, который
+     # парсится с сайта. При поиске, ищится вначале в файле, если нет - идет на сайт и парсит от туда.
 
      # МОДУЛЬ 3:
      # TODO: сделать поиск по HV
@@ -16,11 +22,19 @@
      # TODO: сделать расчет химанкера
 
     # =============================================================
+    pass
+
+# рисует линию
+def line():
+    print ("{0:=^60}".format(" METALSVIST "))
+
+list_of_din = ""
 
 # МОДУЛЬ 1: преобразование госта в дин
 def gost2din():
 
-    print("\n" + "Преобразование гостов в din".upper())
+    print("\n" + "{0:>^16} Преобразование гостов в din {0:<^16}".format("").upper())
+    gost = input("Введите номер ГОСТа >> ")
 
     # Словарь соотношений ГОСТа в DIN + ISO
     dic_for_standarts = {
@@ -114,18 +128,16 @@ def gost2din():
          "28964" : "DIN 916, ISO 4029",
     }
 
-    gost = input("Введите только номер ГОСТа: ")
-    
     # получение ключа-госта из введенного пользователем
     temp_keys = ""
     get_keys = ""
-    
+
     for keys in dic_for_standarts:
         temp_keys = keys
         search_gost = gost.find(temp_keys)
         if search_gost >= 0:
             get_keys = temp_keys
-      
+
     # поиск ключа в словаре гостов
     output_from_dic = (dic_for_standarts.get(get_keys))
 
@@ -134,109 +146,181 @@ def gost2din():
          print("Нет аналогов")
     else:
         print("= Аналог(и) " + str(get_keys) + ": ")
-        
+
         # получение ключа из словаря и удаление пробела
         output_from_dic = (dic_for_standarts.get(get_keys).replace(", ", ","))
 
         # преобразование строки в список
         total_list_of_standarts = list(output_from_dic.split(","))
-        
-        # почлучение к-во стандартов по ключу
+       
+        # МОДУЛЬ 2: отображдение имени через парсинг с сайта
+
+
+        def name_from_site():
+            
+            #   парсинг информации из сайта по поиску
+            search_id = total_list_of_standarts[0]
+            url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
+            r = requests.get(url)
+
+            with open('parser.xml', 'w') as output_file:
+                output_file.write(r.text)
+            with open("parser.xml", "r") as f:
+                contents = f.read()
+
+            soup = BeautifulSoup(contents, 'lxml')
+            soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
+            soup_from_perser = BeautifulSoup(contents, 'lxml')
+            soup_final_search_name = str(soup_from_perser.find("a" , {"class": "propTitle"}))
+            start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
+            finist_search_name = int(soup_final_search_name.find('</a>'))
+            name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
+             
+            start_search_din = int(soup_find.find("<b>")+44)
+            din_from_site = str(soup_find[start_search_din:400].strip())
+            if din_from_site in total_list_of_standarts:
+                print("Названии изделия: ".upper() + str(name_from_site))
+            else:
+                din_from_site = None
+
+
+
+
+
+
+
+
+
+        # def name_from_site():
+            
+        #     #   парсинг информации из сайта по поиску
+        #     search_id = "din912"
+        #     url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
+        #     r = requests.get(url)
+
+
+        #     # Запись полученного парсинга
+        #     with open('search.html', 'w') as output_file:
+        #         output_file.write(r.text)
+
+        #     # Создание супа для фильтрации по названии товара и его маркировка
+        #     with open("search.html", "r") as f:
+        #         contents = f.read()
+        #         soup = BeautifulSoup(contents, 'lxml')
+
+        #     # фильт и запись полученного фильтра
+        #     with open ('parser.xml', 'w') as output_file:
+        #         soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
+        #         soup_from_perser = BeautifulSoup(contents, 'lxml')
+        #         soup_final_search_name = str(soup_from_perser.find("a" , {"class": "propTitle"}))
+        #         output_file.write(soup_find)
+
+        #     # второй, боллее приближенный фильтр
+        #     with open ('parser.xml', 'r') as output_filter_file:
+                
+        #         start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
+        #         finist_search_name = int(soup_final_search_name.find('</a>'))
+        #         name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
+                
+        #         start_search_din = int(soup_find.find("<b>")+44)
+        #         din_from_site = str(soup_find[start_search_din:400].strip())
+
+
+        #         if din_from_site in total_list_of_standarts:
+        #             print("Названии изделия: ".upper() + str(name_from_site))
+        #         else:
+        #             print("HZZZZ")
+
+
+
+        # получение к-во стандартов по ключу
         zero_count_standarts = 0
         count_of_list_of_standart = (len(total_list_of_standarts) - 1)
-                   
+
+
+        
+
+
         # выполняется перебор найденных стандартов при сравнении гостов и динов
         # и выводится в виде столбика найденные дины
         while count_of_list_of_standart >= zero_count_standarts:
              print("== " + str(total_list_of_standarts[zero_count_standarts]))
              zero_count_standarts += 1
+        print("")
+        name_from_site()
+        test_poligone()
         start()
 
-# МОДУЛЬ 2: отображдение имени через парсинг с сайта
-def name_from_site():
-    print("\n" + "\t" + "названии товара".upper())
-    #   парсинг информации из сайта по поиску
-    search_id = "din912"
-    url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
-    r = requests.get(url)
 
-    # Запись полученного парсинга
-    with open('search.html', 'w') as output_file:
-        output_file.write(r.text)
 
-    # Создание супа для фильтрации по названии товара и его маркировка
-    with open("search.html", "r") as f:
-        contents = f.read()
-        soup = BeautifulSoup(contents, 'lxml')
 
-    # фильт и запись полученного фильтра
-    with open ('parser.xml', 'w') as output_file:
-        soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
-        soup_from_perser = BeautifulSoup(soup_find, 'lxml')
-        output_file.write(soup_find)
+def test_poligone():
+    pass
 
-    # второй, боллее приближенный фильтр
-    with open ('parser.xml', 'r') as output_filter_file:
-        soup_final_find = str(soup_from_perser.find(attrs={"class" : "h2"}))
 
-        # создание фальла полученного после последнего фильтра
-        with open ('final_filter.xml', 'w') as final_filter:
-            final_filter.write(soup_final_find)
-            print("write final_filter is ok")
-        print(soup_final_find)
-        
-# расчитывает HV крепеж по заданной толщине пакета        
+# МОДУЛЬ 3: расчитывает HV крепеж по заданной толщине пакета
 def hv():
-    
+
     diameter = "12"
     hv_long = 0
     client_long = 15
-    
+
     dic_hv_diameter_M12 = {
     "30" : "6,10",
     "35" : "11,15",
     "40" : "16,20",
-    
+
+
     }
+
     #создание листа из словаря
     diametr_to_list = list(dic_hv_diameter_M12.get(diameter).split(","))
-    #diameter = diameter.split(",")
-    
+
+
     # создание размеров: начальный, конечный, рекомендуемая длинна болта
     start_l = (diametr_to_list[0])
-    start_l = int(start_l) - 1 
+    start_l = int(start_l) - 1
     finish_l = (diametr_to_list[1])
     finish_l = int(finish_l)
 
-    
+
     total_long = 0
-    
+
     while start_l < finish_l:
 
         start_l += 1
         total_long = start_l
         print (total_long)
-        
-        
-# запуск скрипта
+
+# МЕНЮ запуска скриптов + главное меню
 def start():
-     print("\n============================== \n\nGost2DIN: 1 ")
-     print("HV: 2 ")
-     module_start = input("Выберите значение: ")
-     
-     if module_start == "1":
-        print("\n==============================")
+    line()
+    print ("Выбери раздел:  | Gost2DIN: 1  | HV: 2   |\n\
+ \t\t| Home: 0      | Exit: e |")
+    module_start = input("Выберите значение: ")
+
+
+    if module_start == "1":
+        line()
         gost2din()
-        
-     elif module_start == "2":
-        print("\n==============================")
+
+    elif module_start == "2":
+        line()
         hv()
-        
-     else:
-        print("попробуй снова...")
+
+    elif module_start == "e":
+        os.system('clear')
+        sys.exit()
+
+    elif module_start == "0":
+        line()
         start()
-     
-     start()
+
+    else:
+        print("Мимо... попробуй снова...")
+        start()
+
+    start()
 
 
 start()
