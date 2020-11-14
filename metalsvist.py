@@ -3,7 +3,7 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
-def todo_list():
+
     # =============================================================
      # МОДУЛЬ 1: Гост2Дин
 
@@ -20,9 +20,6 @@ def todo_list():
 
      # МОДУЛЬ 5:
      # TODO: сделать расчет химанкера
-
-    # =============================================================
-    pass
 
 # рисует линию
 def line():
@@ -152,14 +149,21 @@ def gost2din():
 
         # преобразование строки в список
         total_list_of_standarts = list(output_from_dic.split(","))
+
+        # получение к-во стандартов по ключу
+        zero_count_standarts = 0
+        count_of_list_of_standart = (len(total_list_of_standarts) - 1)
        
         # МОДУЛЬ 2: отображдение имени через парсинг с сайта
 
 
-        def name_from_site():
-            
+        def name_from_metalvis():
+            count = 0
+            output = 1
+
             #   парсинг информации из сайта по поиску
-            search_id = total_list_of_standarts[0]
+            search_id = total_list_of_standarts[count]
+            
             url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
             r = requests.get(url)
 
@@ -167,87 +171,49 @@ def gost2din():
                 output_file.write(r.text)
             with open("parser.xml", "r") as f:
                 contents = f.read()
+                soup = BeautifulSoup(contents, 'lxml')
+                soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
+                soup_from_perser = BeautifulSoup(contents, 'lxml')
+                soup_final_search_name = str(soup_from_perser.find("a" , {"class": "propTitle"}))
 
-            soup = BeautifulSoup(contents, 'lxml')
-            soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
-            soup_from_perser = BeautifulSoup(contents, 'lxml')
-            soup_final_search_name = str(soup_from_perser.find("a" , {"class": "propTitle"}))
-            start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
-            finist_search_name = int(soup_final_search_name.find('</a>'))
-            name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
-             
-            start_search_din = int(soup_find.find("<b>")+44)
-            din_from_site = str(soup_find[start_search_din:400].strip())
-            if din_from_site in total_list_of_standarts:
-                print("Названии изделия: ".upper() + str(name_from_site))
-            else:
-                din_from_site = None
+                while output == 1:
 
+                    
+                    start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
+                    finist_search_name = int(soup_final_search_name.find('</a>'))
+                    name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
+                    
+                    # print()
+                    start_search_din = int(soup_find.find("<b>")+44)
+                    din_from_site = str(soup_find[start_search_din:400].strip())
+                    print(din_from_site)
 
+                    print()
 
+                    if din_from_site in total_list_of_standarts:
+                        print("Названии изделия: ".upper() + str(name_from_site) + "\n")
+                    else:
+                        din_from_site = None
+                        if count_of_list_of_standart >= count:
+                            count += 1
+                            print("выхлоп с ноне")
+                        else:
+                            output == 0
 
-
-
-
-
-
-        # def name_from_site():
-            
-        #     #   парсинг информации из сайта по поиску
-        #     search_id = "din912"
-        #     url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
-        #     r = requests.get(url)
-
-
-        #     # Запись полученного парсинга
-        #     with open('search.html', 'w') as output_file:
-        #         output_file.write(r.text)
-
-        #     # Создание супа для фильтрации по названии товара и его маркировка
-        #     with open("search.html", "r") as f:
-        #         contents = f.read()
-        #         soup = BeautifulSoup(contents, 'lxml')
-
-        #     # фильт и запись полученного фильтра
-        #     with open ('parser.xml', 'w') as output_file:
-        #         soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
-        #         soup_from_perser = BeautifulSoup(contents, 'lxml')
-        #         soup_final_search_name = str(soup_from_perser.find("a" , {"class": "propTitle"}))
-        #         output_file.write(soup_find)
-
-        #     # второй, боллее приближенный фильтр
-        #     with open ('parser.xml', 'r') as output_filter_file:
-                
-        #         start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
-        #         finist_search_name = int(soup_final_search_name.find('</a>'))
-        #         name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
-                
-        #         start_search_din = int(soup_find.find("<b>")+44)
-        #         din_from_site = str(soup_find[start_search_din:400].strip())
+                    print("выхлоп с вил")
+                    output += 1
+                else:
+                    print("hz nnone")
 
 
-        #         if din_from_site in total_list_of_standarts:
-        #             print("Названии изделия: ".upper() + str(name_from_site))
-        #         else:
-        #             print("HZZZZ")
-
-
-
-        # получение к-во стандартов по ключу
-        zero_count_standarts = 0
-        count_of_list_of_standart = (len(total_list_of_standarts) - 1)
-
-
-        
-
-
-        # выполняется перебор найденных стандартов при сравнении гостов и динов
         # и выводится в виде столбика найденные дины
         while count_of_list_of_standart >= zero_count_standarts:
              print("== " + str(total_list_of_standarts[zero_count_standarts]))
              zero_count_standarts += 1
+
+
         print("")
-        name_from_site()
+        name_from_metalvis()
         test_poligone()
         start()
 
