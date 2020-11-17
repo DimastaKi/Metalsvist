@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 import requests
@@ -17,6 +19,7 @@ from bs4 import BeautifulSoup
 
      # МОДУЛЬ 4:
      # TODO: сделать поиск по дину по сайту
+     # TODO: metalvis не подходит... или сделать фильтр не по динам
 
      # МОДУЛЬ 5:
      # TODO: сделать расчет химанкера
@@ -174,16 +177,16 @@ def gost2din():
                 soup = BeautifulSoup(contents, 'lxml')
                 soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
                 soup_from_perser = BeautifulSoup(contents, 'lxml')
-                soup_final_search_name = str(soup_from_perser.find("a" , {"class": "propTitle"}))
-
+                
                 while output == 1:
-
+                    soup_final_search_name = str(soup_from_perser.find("a" , {"class": "propTitle"}))
+                    print(soup_final_search_name)
                     
                     start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
                     finist_search_name = int(soup_final_search_name.find('</a>'))
                     name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
                     
-                    # print()
+                    print(name_from_site)
                     start_search_din = int(soup_find.find("<b>")+44)
                     din_from_site = str(soup_find[start_search_din:400].strip())
                     print(din_from_site)
@@ -196,14 +199,12 @@ def gost2din():
                         din_from_site = None
                         if count_of_list_of_standart >= count:
                             count += 1
-                            print("выхлоп с ноне")
                         else:
                             output == 0
 
-                    print("выхлоп с вил")
                     output += 1
                 else:
-                    print("hz nnone")
+                    output = 1
 
 
         # и выводится в виде столбика найденные дины
