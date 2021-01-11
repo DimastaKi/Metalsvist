@@ -33,6 +33,7 @@ list_of_din = ""
 # МОДУЛЬ 1: преобразование госта в дин
 def gost2din():
 
+    os.system('clear')
     print("\n" + "{0:>^16} Преобразование гостов в din {0:<^16}".format("").upper())
     gost = input("Введите номер ГОСТа >> ")
 
@@ -113,7 +114,7 @@ def gost2din():
          "15523" : "DIN 6330",
          "17473" : "DIN 85, DIN 7985, ISO 1580, ISO 7045",
          "17474" : "DIN 964, DIN 966, ISO 2010, ISO 7047",
-         "17475" : "DIN 963, DIN 965, ISO 2009, ISO 7046-1, ISO 7046-2",
+         "17475" : "DIN 963, DIN 965, ISO 2009, ISO 7046",
          "17673" : "DIN 605",
          "18746" : "DIN 427, ISO 2342",
          "22033" : "DIN 938",
@@ -157,55 +158,59 @@ def gost2din():
         zero_count_standarts = 0
         count_of_list_of_standart = (len(total_list_of_standarts) - 1)
        
-        # МОДУЛЬ 2: отображдение имени через парсинг с сайта
 
+        # МОДУЛЬ 2: отображдение имени через парсинг с сайта
 
         def name_from_metalvis():
             count = 0
             output = 1
+            while output == 1:
 
-            #   парсинг информации из сайта по поиску
-            search_id = total_list_of_standarts[count]
-            
-            url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
-            r = requests.get(url)
+                # перебор словаря. Номер count вызывает позицию в словаре. Если конец словаря - вызывает ловит exception
+                try:
+                    search_id = total_list_of_standarts[count]
+                except IndexError:
+                    break 
 
-            with open('parser.xml', 'w') as output_file:
-                output_file.write(r.text)
-            with open("parser.xml", "r") as f:
-                contents = f.read()
-                soup = BeautifulSoup(contents, 'lxml')
-                soup_find = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
-                soup_from_perser = BeautifulSoup(contents, 'lxml')
-                
-                while output == 1:
-                    soup_final_search_name = str(soup_from_perser.find("a" , {"class": "propTitle"}))
-                    print(soup_final_search_name)
+                #   парсинг информации из сайта по поиску
+                url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
+                r = requests.get(url)
+
+                with open('parser.xml', 'w') as output_file:
+                    output_file.write(r.text)
+                with open("parser.xml", "r") as f:
+                    contents = f.read()
+                    soup = BeautifulSoup(contents, 'lxml')
                     
-                    start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
-                    finist_search_name = int(soup_final_search_name.find('</a>'))
-                    name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
-                    
-                    print(name_from_site)
-                    start_search_din = int(soup_find.find("<b>")+44)
-                    din_from_site = str(soup_find[start_search_din:400].strip())
-                    print(din_from_site)
+                    while output == 1:
 
-                    print()
+                        #Search Name of product
+                        soup_final_search_name = str(soup.find("a" , {"class": "propTitle"}))
+                        start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
+                        finist_search_name = int(soup_final_search_name.find('</a>'))
+                        name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
+                        
+                        #Search product ID
+                        soup_find_product_id = str(soup.find_all(attrs={"class": "catalogue_item_table clear"}))
+                        search_start_point_product_id = int(soup_find_product_id.find('itemprop="productID">') + 21)
+                        search_finish_point_product_id = int(soup_find_product_id.find("</a>"))
+                        result_product_id = soup_find_product_id[search_start_point_product_id:search_finish_point_product_id:]
+                        
 
-                    if din_from_site in total_list_of_standarts:
-                        print("Названии изделия: ".upper() + str(name_from_site) + "\n")
+                        #заберает DIN с сайта
+                        search_din = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
+                        start_search_din = int(search_din.find("<b>")+48)
+                        finish_search_din = int(search_din.find("</b>"))
+                        din_from_site = str((search_din[start_search_din:finish_search_din:]).replace(" ", ""))
+                        print("Product id:" + str(result_product_id))
+                        print("Названии изделия: ".upper() + str(din_from_site) + " " + str(name_from_site) + "\n")
+
+                        count += 1
+                        break
                     else:
-                        din_from_site = None
-                        if count_of_list_of_standart >= count:
-                            count += 1
-                        else:
-                            output == 0
-
-                    output += 1
-                else:
-                    output = 1
-
+                        output = 0
+            else:
+                output = 0
 
         # и выводится в виде столбика найденные дины
         while count_of_list_of_standart >= zero_count_standarts:
@@ -216,7 +221,7 @@ def gost2din():
         print("")
         name_from_metalvis()
         test_poligone()
-        start()
+
 
 
 
@@ -262,8 +267,9 @@ def hv():
 # МЕНЮ запуска скриптов + главное меню
 def start():
     line()
-    print ("Выбери раздел:  | Gost2DIN: 1  | HV: 2   |\n\
- \t\t| Home: 0      | Exit: e |")
+
+    print ("Выбери раздел:  | Gost2DIN: 1  | HV: 2 (Under construction)   |\n\
+ \t\t|              | Exit: e |")
     module_start = input("Выберите значение: ")
 
 
