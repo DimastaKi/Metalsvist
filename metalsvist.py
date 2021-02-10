@@ -2,16 +2,13 @@
 
 import os
 import sys
-import requests
-from bs4 import BeautifulSoup
-
 
     # =============================================================
      # МОДУЛЬ 1: Гост2Дин
 
      # Модуль 2:
      # TODO: прикрутить название для динов
-     # TODO: оптимизация: сзделать файл, в который будет записывать значение название дина, который
+     # X TODO: оптимизация: сзделать файл, в который будет записывать значение название дина, который
      # парсится с сайта. При поиске, ищится вначале в файле, если нет - идет на сайт и парсит от туда.
 
      # МОДУЛЬ 3:
@@ -26,7 +23,7 @@ from bs4 import BeautifulSoup
 
 # рисует линию
 def line():
-    print ("{0:=^60}".format(" METALSVIST "))
+    print ("{0:=^60}".format("> METALSVIST <"))
 
 list_of_din = ""
 
@@ -67,7 +64,7 @@ def gost2din():
          "5932" : "DIN 935, DIN 937, ISO 7035, ISO 7036, ISO 7037, ISO 7038",
          "6393" : "DIN 1816",
          "6402" : "DIN 127",
-         "6958" : "DIN 440, DIN 9021, ISO 7094, ISO 7093-1, ISO 7093-2",
+         "6958" : "DIN 440, DIN 9021, ISO 7094, ISO 7093",
          "7798" : "DIN 931, DIN 933, ISO 4014",
          "7801" : "DIN 607",
          "7802" : "DIN 603, ISO 8677",
@@ -129,6 +126,62 @@ def gost2din():
          "28964" : "DIN 916, ISO 4029",
     }
 
+#словарь соотношения DIN в артикула Солди
+    dic_din_in_metalvis_id = {
+         "DIN440" : "7D200 Шайба д/дерева DIN 440",
+         "DIN471" : "95PK1 Стоп.кольцо внешн.471",
+         "DIN472" : "95PK2 Стоп.кольцо внутр.472",
+         "DIN439" : "6Z200 Гайка низкая DIN 439B",
+         "EN14399/6" : "7HV00 Шайба пов.твердости",
+         "DIN6916" : "7HV00 Шайба пов.твердости",
+         "DIN608" : "5V608 Болт потай.квадр.підг",
+         "DIN6798A" : "7V200 Шайба стопорная",
+         "DIN84" : "5M521 Гвинт циліндр.",
+         "DIN85" : "5M521 Гвинт циліндр.",
+         "DIN25201" : "7XNL0 Шайба Nord-Lock",
+         "DIN935" : "6KR20 Гайка корончатая",
+         "DIN9021" : "7N200 Шайба увеличенная",
+         "ISO7380" : "5I220 Винт метр",
+         "DIN6928" : "80620 Саморез /металл 6гр/гл",
+         "DIN1587" : "6KL20 Гайка колпачковая",
+         "DIN7981" : "80520 Саморез /металл полукруг",
+         "DIN94" : "95Z00 Шплинт",
+         "DIN914" : "9800H Штифт с кон.кон",
+         "DIN1481" : "9500P Штифт пружинный",
+         "DIN7603A" : "7U000 Шайба медная",
+         "DIN912" : "5I5O0 Винт вн.6гр",
+         "DIN315" : "6K200 Гайка барашковая",
+         "DIN71412" : "5MM20 Масленка",
+         "DIN7980" : "7P200 Шайба пружинная квад.с.",
+         "DIN6923" : "6L200 Гайка зубчатая",
+         "DIN582" : "5M820 Рымгайка",
+         "DIN580" : "5M820 Рымболты",
+         "DIN741" : "3S200 Зажим для каната",
+         "DIN7985" : "5M520 Винт полукруг",
+         "ISO10642" : "5I120 Винт метр.пот.вн.6гр",
+         "DIN7991" : "5I120 Винт метр.пот.вн.6гр",
+         "DIN965" : "5M120 Винт потай",
+         "ISO7046" : "5M120 Винт потай",
+         "DIN963" : "5M120 Винт потай",
+         "DIN1480" : "3N200 Захват",
+         "DIN985" : "6P200 Контргайка",
+         "DIN6334" : "6D200 Гайка удлинитель",
+         "DIN125" : "7O200 Шайба плоская",
+         "ISO4032" : "60201 Гайка гарант.кл.8",
+         "ISO10642" : "5I100 Винт метр.пот.вн.6гр",
+         "DIN7504P" : "9T120 Винт с/св.(TEX)потай",
+         "DIN967" : "50202 Винт пкр.бурт.",
+         "DIN7504K" : "9T620 Винт с/св.(TEX)6гр.гл.",
+         "DIN571" : "20620 Винт для дерева",
+         "DIN6796" : "7W000 Шайба пруж. тарельчатая",
+         "DIN603" : "5V220 Болт с квадр.подголовком",
+         "DIN934" : "60200 Гайка",
+         "DIN975" : "5Z200 Резьб.стержень метрич.",
+         "DIN933" : "56600 Болт",
+         "DIN931" : "56600 Болт",
+    }
+
+
     # получение ключа-госта из введенного пользователем
     temp_keys = ""
     get_keys = ""
@@ -144,9 +197,9 @@ def gost2din():
 
     # Если ключа нет - выводит None, иначе - значение словаря
     if output_from_dic == None:
-         print("Нет аналогов")
+         print("\n=> Нет аналогов или ошибка в написании\n".upper())
     else:
-        print("= Аналог(и) " + str(get_keys) + ": ")
+        print("\nАналог(и) ГОСТ " + str(get_keys) + ": ")
 
         # получение ключа из словаря и удаление пробела
         output_from_dic = (dic_for_standarts.get(get_keys).replace(", ", ","))
@@ -157,74 +210,27 @@ def gost2din():
         # получение к-во стандартов по ключу
         zero_count_standarts = 0
         count_of_list_of_standart = (len(total_list_of_standarts) - 1)
-       
-
-        # МОДУЛЬ 2: отображдение имени через парсинг с сайта
-
-        def name_from_metalvis():
-            count = 0
-            output = 1
-            while output == 1:
-
-                # перебор словаря. Номер count вызывает позицию в словаре. Если конец словаря - вызывает ловит exception
-                try:
-                    search_id = total_list_of_standarts[count]
-                except IndexError:
-                    break 
-
-                #   парсинг информации из сайта по поиску
-                url = 'http://metalvis.ua/search/?q=' + search_id + '&prf' # url страницы
-                r = requests.get(url)
-
-                with open('parser.xml', 'w') as output_file:
-                    output_file.write(r.text)
-                with open("parser.xml", "r") as f:
-                    contents = f.read()
-                    soup = BeautifulSoup(contents, 'lxml')
-                    
-                    while output == 1:
-
-                        #Search Name of product
-                        soup_final_search_name = str(soup.find("a" , {"class": "propTitle"}))
-                        start_search_name = int(soup_final_search_name.find('style="height:auto">') + 20)
-                        finist_search_name = int(soup_final_search_name.find('</a>'))
-                        name_from_site = soup_final_search_name[start_search_name:finist_search_name:]
-                        
-                        #Search product ID
-                        soup_find_product_id = str(soup.find_all(attrs={"class": "catalogue_item_table clear"}))
-                        search_start_point_product_id = int(soup_find_product_id.find('itemprop="productID">') + 21)
-                        search_finish_point_product_id = int(soup_find_product_id.find("</a>"))
-                        result_product_id = soup_find_product_id[search_start_point_product_id:search_finish_point_product_id:]
-                        
-
-                        #заберает DIN с сайта
-                        search_din = str(soup.find_all(attrs={"class" : "h catalogue_descr"}))
-                        start_search_din = int(search_din.find("<b>")+48)
-                        finish_search_din = int(search_din.find("</b>"))
-                        din_from_site = str((search_din[start_search_din:finish_search_din:]).replace(" ", ""))
-                        print("Product id:" + str(result_product_id))
-                        print("Названии изделия: ".upper() + str(din_from_site) + " " + str(name_from_site) + "\n")
-
-                        count += 1
-                        break
-                    else:
-                        output = 0
-            else:
-                output = 0
-
+        
         # и выводится в виде столбика найденные дины
         while count_of_list_of_standart >= zero_count_standarts:
-             print("== " + str(total_list_of_standarts[zero_count_standarts]))
-             zero_count_standarts += 1
+            one_standart_in_list = total_list_of_standarts[zero_count_standarts]
+            zero_count_standarts += 1
 
+            #удаление пробелов в полученном списке
+            temp_one_standart_in_list = one_standart_in_list.replace(" ", "")
+
+            # поиск по стандарта по артикулу в Солди
+            for i in dic_din_in_metalvis_id:
+                get_metalvis_id = dic_din_in_metalvis_id.get(temp_one_standart_in_list)
+                if get_metalvis_id == None:
+                    print("==> " + str(one_standart_in_list) + ". Metalvis ID: - ")
+                    break
+                else:
+                    print("==> " + str(one_standart_in_list) + ". Metalvis ID: " + str(get_metalvis_id))
+                    break
 
         print("")
-        name_from_metalvis()
         test_poligone()
-
-
-
-
 
 def test_poligone():
     pass
@@ -268,9 +274,8 @@ def hv():
 def start():
     line()
 
-    print ("Выбери раздел:  | Gost2DIN: 1  | HV: 2 (Under construction)   |\n\
- \t\t|              | Exit: e |")
-    module_start = input("Выберите значение: ")
+    print ("\nВыбери раздел:\n1: Преобразование ГОСТа в DIN\n2: Просчет размеров для HV крепежа(Under construction)\n3: Расчет веса метизов(Under construction)\nе: Выйти из программы\n")
+    module_start = input("Выберите раздел: ")
 
 
     if module_start == "1":
