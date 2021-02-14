@@ -2,7 +2,12 @@
 
 import os
 import sys
-from dict_metalvis_id import dic_din_in_metalvis_id
+from pathlib import Path
+import dict_metalvis_id as metalvis_id
+import shutil
+
+metalvis_id = {metalvis_id}
+
     # =============================================================
      # МОДУЛЬ 1: Гост2Дин
 
@@ -26,9 +31,11 @@ from dict_metalvis_id import dic_din_in_metalvis_id
 def line():
     print ("{0:=^60}".format("> METALSVIST <"))
 
-list_of_din = ""
 
+# list_of_din = ""
 
+# принимает значение пути в ОС, где находится скрипт
+parent = Path(__file__).resolve().parent
 
 #словарь соотношения DIN в артикула Солди
 # dic_din_in_metalvis_id = {
@@ -184,9 +191,6 @@ def module_gost2din():
          "28964" : "DIN 916, ISO 4029",
     }
 
-
-
-
     # получение ключа-госта из введенного пользователем
     temp_keys = ""
     get_keys = ""
@@ -215,27 +219,33 @@ def module_gost2din():
         # получение к-во стандартов по ключу
         zero_count_standarts = 0
         count_of_list_of_standart = (len(total_list_of_standarts) - 1)
+        # print ("count_of_list_of_standart" + str(count_of_list_of_standart))
+
+        one_standart_in_list = total_list_of_standarts[zero_count_standarts]
+        temp_one_standart_in_list = one_standart_in_list.replace(" ", "")
         
         # и выводится в виде столбика найденные дины
         while count_of_list_of_standart >= zero_count_standarts:
+
             one_standart_in_list = total_list_of_standarts[zero_count_standarts]
+            one_standart_in_list = one_standart_in_list.replace(" ", "")
+
+            # открывает словарь/лист для поиска значения
+            open_dict = (open(str(parent) + "/dict_metalvis_id.py", "r"))
+            b = open_dict.readline()
+            a = eval(b)
+
+            # проверяет есть ли ошибка в названии и выводит сообщение
+            try:
+                b = a[one_standart_in_list]
+                print (str(one_standart_in_list) + "- Metalvis ID: " + str(b))
+                open_dict.close()
+            except KeyError:
+                print (str(one_standart_in_list) + ". No Metalvis ID")
+                open_dict.close()
+
             zero_count_standarts += 1
 
-            #удаление пробелов в полученном списке
-            temp_one_standart_in_list = one_standart_in_list.replace(" ", "")
-
-            # поиск по стандарта по артикулу в Солди
-            for i in dic_din_in_metalvis_id:
-                get_metalvis_id = dic_din_in_metalvis_id.get(temp_one_standart_in_list)
-                if get_metalvis_id == None:
-                    print("==> " + str(one_standart_in_list) + ". Metalvis ID: не найден ")
-                    break
-                else:
-                    print("==> " + str(one_standart_in_list) + ". Metalvis ID: " + str(get_metalvis_id))
-                    break
-
-        print("")
-        test_poligone()
 
 # МОДУЛЬ 3: расчитывает HV крепеж по заданной толщине пакета
 def module_hv():
@@ -271,57 +281,105 @@ def module_hv():
         total_long = start_l
         print (total_long)
 
+def module_test():
+    pass
+
 def module_din_in_metalvis_id():
     print("\n" + "{0:>^7} Поиск артикула в базе Metalvis согластно din {0:<^7}".format("").upper())
     find_din = input("Напишите номер Вaшего DINa: ")
     find_din = ("DIN" +str(find_din))
-    for i in dic_din_in_metalvis_id:
-        get_metalvis_id = dic_din_in_metalvis_id.get(find_din)
-        if get_metalvis_id == None:
-            print ("Товар не найден.")
-            break
-        else:
-            print ("\nMetalvis ID: " + str(get_metalvis_id) + "\n")
-            break
+
+    # открывает словарь/лист для поиска значения
+    open_dict = (open(str(parent) + "/dict_metalvis_id.py", "r"))
+    b = open_dict.readline()
+    a = eval(b)
+
+    # проверяет есть ли ошибка в названии и выводит сообщение
+    try:
+        b = a[find_din]
+        print ("\n" + str(find_din) + "- Metalvis ID: " + str(b) + "\n")
+        open_dict.close()
+    except KeyError:
+        print (str(find_din) + ". No Metalvis ID\n")
+        open_dict.close()
 
 def module_admin():
     print ("{0:=^60}".format("> ADMIN PANEL <"))
     print("\n\
     id: Добавление новых пар значений в словарь поиска артикулов Metalvis\n\
     e: Выйти в главное меню\n")
-    
-
 
     module_start = input("Выберите раздел: ")
 
     if module_start == "id":
-        print("Пример оформления:'DIN931' : '56600 Болт'")
-        input_new_din = input("Напишите ТОЛЬКО номер DINa(ключ словаря): ")
+        print("Пример записи:'DIN931':'56600 Болт'")
+        input_new_din = input("Напишите ТОЛЬКО номер DINa(ключ словаря): DIN")
         new_din = ("DIN" + str(input_new_din))
-        new_metalvis_id = input("Напишите артикул в базе Metalvis(знаение словаря)\n")
-        print("\nВы ввели: " + "ключ: '" + str(new_din) + "'" + " : " + "значение: '" + str(new_metalvis_id) + "'\n")
-        print("     '" + str(new_din) + "'" + " : " + "'" + str(new_metalvis_id) + "'\n")
+        new_metalvis_id = input("Напишите артикул(Группа Название_группы): ")
+        print("\nБудет записано: '" + str(new_din) + "'" + " : " + "'" + str(new_metalvis_id) + "'\n")
         
         print ("Все верно? \n\
             Y - записать\n\
             N - вернутся  в начало\n")
         new_id = input ("Выберите действие: ")
 
-        if new_id == "N":
+        if new_id == "n":
             module_admin()
         elif new_id == "Y":
-            dict_metalvis_id[new_id] = new_metalvis_id
+            
+            # проверка на бэкапость словаря, если нет бэкапа словаря - создает его
+            check_backup = (os.path.exists(str(parent) + "/backup_dict_metalvis_id.py"))
+            check_backup
+            if check_backup == False:
+                print(shutil.copyfile(str(parent) + "/dict_metalvis_id.py", str(parent) + "/backup_dict_metalvis_id.py"))
+            
+            # выводит размеры бэкапов
+            backup_file_size = os.path.getsize(str(parent) + "/backup_dict_metalvis_id.py")
+            old_file_size = os.path.getsize(str(parent) + "/dict_metalvis_id.py")
+            print("new file size:" + str(old_file_size) + "; backup size:" + str(backup_file_size))
+
+            # создание бэкапа из словаря
+            copy = shutil.copyfile(str(parent) + "/dict_metalvis_id.py", str(parent) + "/backup_dict_metalvis_id.py")
+            print ("создание бэкапа словаря: " + str(copy))
+
+            open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
+
+            
+            # write_dict = open(str(parent) + "/dict_metalvis_id.py", "w")
+           
+            print(open_dict)
+
+
+
             print ("Записан новый ключ в словаре")
-            print(dict_metalvis_id)
+
         else:
             print("Не известная команда")
             module_admin()
     else:
         start()
 
+
+dic_din_in_metalvis_id = (metalvis_id)
+print(dic_din_in_metalvis_id)
+print (type(dic_din_in_metalvis_id))
+open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
+print (open_dict)
+
 # МЕНЮ запуска скриптов + главное меню
 def start():
     line()
+
+
+
+    # open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
+    # open_dict = 
+    # print (open_dict)
+
+
+
+
+    #module_test()
 
     print ("\nВыбери раздел:\n\
     1: Преобразование ГОСТа в DIN\n\
