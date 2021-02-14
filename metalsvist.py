@@ -344,6 +344,20 @@ def module_admin():
 
             open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
 
+            add_item = ('"' + str(new_din) + '"' + ' : ' + '"' + str(new_metalvis_id) + '"' + ',')
+
+            sets = str(open_dict.read())
+            sets = sets.replace("}", "")
+
+            new_item = (str(sets) + str(add_item) +"}")
+
+
+            open_dict = open(str(parent) + "/dict_metalvis_id.py", "w")
+            write_item = open_dict.write(str(new_item))
+
+            open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
+            sets = str(open_dict.read())
+
             
             # write_dict = open(str(parent) + "/dict_metalvis_id.py", "w")
            
@@ -360,11 +374,8 @@ def module_admin():
         start()
 
 
-dic_din_in_metalvis_id = (metalvis_id)
-print(dic_din_in_metalvis_id)
-print (type(dic_din_in_metalvis_id))
-open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
-print (open_dict)
+# dic_din_in_metalvis_id = (metalvis_id)
+
 
 # МЕНЮ запуска скриптов + главное меню
 def start():
