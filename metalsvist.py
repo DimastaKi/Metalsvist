@@ -10,13 +10,12 @@ metalvis_id = {metalvis_id}
 
     # =============================================================
      # МОДУЛЬ 1: Гост2Дин
-     # Убрать все DIN/ISO со словарей, т.к. ИСО не ищется
 
      # Модуль 2:
      # V TODO: прикрутить название для динов
      # X TODO: оптимизация: сзделать файл, в который будет записывать значение название дина, который
      # X парсится с сайта. При поиске, ищится вначале в файле, если нет - идет на сайт и парсит от туда.
-     # вынести словарь dic_din_in_metalvis  в отдельный модуль и подключить его
+     # V вынести словарь dic_din_in_metalvis  в отдельный модуль и подключить его
 
      # МОДУЛЬ 3:
      # TODO: сделать поиск по HV
@@ -287,8 +286,9 @@ def module_test():
 
 def module_din_in_metalvis_id():
     print("\n" + "{0:>^7} Поиск артикула в базе Metalvis согластно din {0:<^7}".format("").upper())
-    find_din = input("Напишите номер Вaшего DINa: ")
-    find_din = ("DIN" +str(find_din))
+    input_standart = input("Напишите номер Вaшего DINa: ")
+    find_din = ("DIN" + str(input_standart))
+    find_iso = ("ISO" + str(input_standart))
 
     # открывает словарь/лист для поиска значения
     open_dict = (open(str(parent) + "/dict_metalvis_id.py", "r"))
@@ -301,8 +301,13 @@ def module_din_in_metalvis_id():
         print ("\n" + str(find_din) + "- Metalvis ID: " + str(b) + "\n")
         open_dict.close()
     except KeyError:
-        print (str(find_din) + ". No Metalvis ID\n")
-        open_dict.close()
+        try:
+            b = a[find_iso]
+            print ("\n" + str(find_iso) + "- Metalvis ID: " + str(b) + "\n")
+            open_dict.close()
+        except KeyError:
+            print ("Введеный DIN/ISO: " + str(input_standart) + ". Нет в базе Metalvis\n")
+            open_dict.close()
 
 def module_admin():
     print ("{0:=^60}".format("> ADMIN PANEL <"))
