@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 import shutil
 
+#merge test
 
     # =============================================================
      # МОДУЛЬ 1: Гост2Дин
