@@ -28,7 +28,7 @@ import shutil
 
 # рисует линию
 def line():
-    print ("{0:=^60}".format("> METALSVIST <"))
+    print ("{0:=^60}".format("> METALL-SVIST <"))
 
 
 # list_of_din = ""
@@ -206,7 +206,7 @@ def module_gost2din():
     if output_from_dic == None:
          print("\n=> Нет аналогов или ошибка в написании\n".upper())
     else:
-        print("\nАналог(и) ГОСТ " + str(get_keys) + ": ")
+        print("\nАналог(и) ГОСТ " + str(get_keys) + ": \n")
 
         # получение ключа из словаря и удаление пробела
         output_from_dic = (dic_for_standarts.get(get_keys).replace(", ", ","))
@@ -236,13 +236,14 @@ def module_gost2din():
             # проверяет есть ли ошибка в названии и выводит сообщение
             try:
                 b = a[one_standart_in_list]
-                print (str(one_standart_in_list) + "- Metalvis ID: " + str(b))
+                print (str(one_standart_in_list) + " - " + str(b))
                 open_dict.close()
             except KeyError:
-                print (str(one_standart_in_list) + ". No Metalvis ID")
+                print (str(one_standart_in_list) + " - Нет в ассортименте Metalvis")
                 open_dict.close()
-
+            
             zero_count_standarts += 1
+        print ("")
 
 
 # МОДУЛЬ 3: расчитывает HV крепеж по заданной толщине пакета
@@ -284,8 +285,9 @@ def module_test():
 
 def module_din_in_metalvis_id():
     print("\n" + "{0:>^7} Поиск артикула в базе Metalvis согластно din {0:<^7}".format("").upper())
-    find_din = input("Напишите номер Вaшего DINa: ")
-    find_din = ("DIN" +str(find_din))
+    input_standart = input("Напишите номер Вaшего DINa: ")
+    find_din = ("DIN" + str(input_standart))
+    find_iso = ("ISO" + str(input_standart))
 
     # открывает словарь/лист для поиска значения
     open_dict = (open(str(parent) + "/dict_metalvis_id.py", "r"))
@@ -298,8 +300,13 @@ def module_din_in_metalvis_id():
         print ("\n" + str(find_din) + "- Metalvis ID: " + str(b) + "\n")
         open_dict.close()
     except KeyError:
-        print (str(find_din) + ". No Metalvis ID\n")
-        open_dict.close()
+        try:
+            b = a[find_iso]
+            print ("\n" + str(find_iso) + "- Metalvis ID: " + str(b) + "\n")
+            open_dict.close()
+        except KeyError:
+            print ("Введеный DIN/ISO: " + str(input_standart) + ". Нет в базе Metalvis\n")
+            open_dict.close()
 
 def module_admin():
     print ("{0:=^60}".format("> ADMIN PANEL <"))
