@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 import shutil
 
-# =============================================================
+    # =============================================================
      # МОДУЛЬ 1: Гост2Дин
 
      # Модуль 2:
@@ -21,22 +21,19 @@ import shutil
      # TODO: сделать расчет химанкера
 
      # МОДУЛЬ ADMIN:
-     # V через перезапись сделать возможность добавление пар в словарь dic_din_in_metalvis
-     # V сделать бэкап перед добавлением нового значение в словарь
-
-# =============================================================
+     # через перезапись сделать возможность добавление пар в словарь dic_din_in_metalvis
+     # сделать бэкап перед добавлением нового значение в словарь
 
 # рисует линию
 def line():
     print ("{0:=^60}".format("> METALL-SVIST <"))
 
 
-# list_of_din = ""
 
 # принимает значение пути в ОС, где находится скрипт
 parent = Path(__file__).resolve().parent
 
-#словарь соотношения DIN в артикула Солди BACKUP
+#BACKUP словарь соотношения DIN в артикула Солди
 # dic_din_in_metalvis_id = {
 #      "DIN440" : "7D200 Шайба д/дерева DIN 440",
 #      "DIN471" : "95PK1 Стоп.кольцо внешн.471",
@@ -89,6 +86,7 @@ parent = Path(__file__).resolve().parent
 #      "DIN975" : "5Z200 Резьб.стержень метрич.",
 #      "DIN933" : "56600 Болт",
 #      "DIN931" : "56600 Болт",
+
 # }
 
 # МОДУЛЬ 1: преобразование госта в дин
@@ -275,7 +273,6 @@ def module_hv():
     total_long = 0
 
     while start_l < finish_l:
-
         start_l += 1
         total_long = start_l
         print (total_long)
@@ -318,9 +315,22 @@ def module_admin():
 
     if module_start == "id":
         print("Пример записи:'DIN931':'56600 Болт'")
-        input_new_din = input("Напишите ТОЛЬКО номер DINa(ключ словаря): DIN")
-        new_din = ("DIN" + str(input_new_din))
-        new_metalvis_id = input("Напишите артикул(Группа Название_группы): ")
+        selected_standard = input("Что вы хотите добавить:\n\
+         i: ISO\n\
+         d: DIN? \n\
+         Выбрать значение: ")
+        if selected_standard == "i":
+            selected_standard = "ISO"
+        elif selected_standard == "d":
+            selected_standard = "DIN"
+        else:
+            print ("Не корректное значение, попробуйте снова")
+            module_admin()
+        input_new_din = input("Напишите ТОЛЬКО номер DIN\\ISO: ")
+
+
+        new_din = (str(selected_standard) + str(input_new_din))
+        new_metalvis_id = input("Напишите артикул(12345 Название группы: ")
         print("\nБудет записано: '" + str(new_din) + "'" + " : " + "'" + str(new_metalvis_id) + "'\n")
         
         print ("Все верно? \n\
@@ -347,30 +357,22 @@ def module_admin():
             copy = shutil.copyfile(str(parent) + "/dict_metalvis_id.py", str(parent) + "/backup_dict_metalvis_id.py")
             print ("создание бэкапа словаря: " + str(copy))
 
-            # открытие вайла со словарем динов
             open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
-
-            # создание новой записи
+            # создание шаблона для добавления нового значение
             add_item = ('"' + str(new_din) + '"' + ' : ' + '"' + str(new_metalvis_id) + '"' + ',')
 
-            # чтетине и преобразование словаря в текст
             sets = str(open_dict.read())
-
-            # удаление лишней скобки в конце файла
             sets = sets.replace("}", "")
 
-            # копирования всего словаря и добавление к нему нового значение
             new_item = (str(sets) + str(add_item) +"}")
 
-            # открытие на перезапись словаря и добавление новой записи
             open_dict = open(str(parent) + "/dict_metalvis_id.py", "w")
             write_item = open_dict.write(str(new_item))
 
-            # перепроверка записанного
             open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
             sets = str(open_dict.read())
-            print(sets)
-            print ("\nЗаписан новый ключ в словаре")
+
+            print ("Записан новый ключ в словаре")
 
         else:
             print("Не известная команда")
@@ -378,10 +380,12 @@ def module_admin():
     else:
         start()
 
+
 # МЕНЮ запуска скриптов + главное меню
 def start():
+    module_test()
+    
     line()
-
     print ("\nВыбери раздел:\n\
     1: Преобразование ГОСТа в DIN\n\
     2: (Не активный)Просчет размеров для HV крепежа\n\
