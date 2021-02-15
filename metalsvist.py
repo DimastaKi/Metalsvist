@@ -28,7 +28,7 @@ import shutil
 def line():
     print ("{0:=^60}".format("> METALL-SVIST <"))
 
-
+# test merge
 
 # принимает значение пути в ОС, где находится скрипт
 parent = Path(__file__).resolve().parent
