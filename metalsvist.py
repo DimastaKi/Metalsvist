@@ -3,19 +3,16 @@
 import os
 import sys
 from pathlib import Path
-import dict_metalvis_id as metalvis_id
 import shutil
 
-metalvis_id = {metalvis_id}
-
-    # =============================================================
+# =============================================================
      # МОДУЛЬ 1: Гост2Дин
 
      # Модуль 2:
      # V TODO: прикрутить название для динов
      # X TODO: оптимизация: сзделать файл, в который будет записывать значение название дина, который
      # X парсится с сайта. При поиске, ищится вначале в файле, если нет - идет на сайт и парсит от туда.
-     # вынести словарь dic_din_in_metalvis  в отдельный модуль и подключить его
+     # V вынести словарь dic_din_in_metalvis  в отдельный модуль и подключить его
 
      # МОДУЛЬ 3:
      # TODO: сделать поиск по HV
@@ -24,8 +21,10 @@ metalvis_id = {metalvis_id}
      # TODO: сделать расчет химанкера
 
      # МОДУЛЬ ADMIN:
-     # через перезапись сделать возможность добавление пар в словарь dic_din_in_metalvis
-     # сделать бэкап перед добавлением нового значение в словарь
+     # V через перезапись сделать возможность добавление пар в словарь dic_din_in_metalvis
+     # V сделать бэкап перед добавлением нового значение в словарь
+
+# =============================================================
 
 # рисует линию
 def line():
@@ -37,7 +36,7 @@ def line():
 # принимает значение пути в ОС, где находится скрипт
 parent = Path(__file__).resolve().parent
 
-#словарь соотношения DIN в артикула Солди
+#словарь соотношения DIN в артикула Солди BACKUP
 # dic_din_in_metalvis_id = {
 #      "DIN440" : "7D200 Шайба д/дерева DIN 440",
 #      "DIN471" : "95PK1 Стоп.кольцо внешн.471",
@@ -90,7 +89,6 @@ parent = Path(__file__).resolve().parent
 #      "DIN975" : "5Z200 Резьб.стержень метрич.",
 #      "DIN933" : "56600 Болт",
 #      "DIN931" : "56600 Болт",
-
 # }
 
 # МОДУЛЬ 1: преобразование госта в дин
@@ -342,30 +340,30 @@ def module_admin():
             copy = shutil.copyfile(str(parent) + "/dict_metalvis_id.py", str(parent) + "/backup_dict_metalvis_id.py")
             print ("создание бэкапа словаря: " + str(copy))
 
+            # открытие вайла со словарем динов
             open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
 
+            # создание новой записи
             add_item = ('"' + str(new_din) + '"' + ' : ' + '"' + str(new_metalvis_id) + '"' + ',')
 
+            # чтетине и преобразование словаря в текст
             sets = str(open_dict.read())
+
+            # удаление лишней скобки в конце файла
             sets = sets.replace("}", "")
 
+            # копирования всего словаря и добавление к нему нового значение
             new_item = (str(sets) + str(add_item) +"}")
 
-
+            # открытие на перезапись словаря и добавление новой записи
             open_dict = open(str(parent) + "/dict_metalvis_id.py", "w")
             write_item = open_dict.write(str(new_item))
 
+            # перепроверка записанного
             open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
             sets = str(open_dict.read())
-
-            
-            # write_dict = open(str(parent) + "/dict_metalvis_id.py", "w")
-           
-            print(open_dict)
-
-
-
-            print ("Записан новый ключ в словаре")
+            print(sets)
+            print ("\nЗаписан новый ключ в словаре")
 
         else:
             print("Не известная команда")
@@ -373,24 +371,9 @@ def module_admin():
     else:
         start()
 
-
-# dic_din_in_metalvis_id = (metalvis_id)
-
-
 # МЕНЮ запуска скриптов + главное меню
 def start():
     line()
-
-
-
-    # open_dict = open(str(parent) + "/dict_metalvis_id.py", "r")
-    # open_dict = 
-    # print (open_dict)
-
-
-
-
-    #module_test()
 
     print ("\nВыбери раздел:\n\
     1: Преобразование ГОСТа в DIN\n\
@@ -402,7 +385,6 @@ def start():
     admin: Администрирование базы")
 
     module_start = input("Выберите раздел: ")
-
 
     if module_start == "1":
         os.system('clear')
