@@ -416,15 +416,27 @@ def module_fine_pitch_fasteners():
     replace_trash = replace_trash.replace("dict_keys([", "Доступные диаметры: \n")
     replace_trash = replace_trash.replace("])", "")
     print (replace_trash)
+
     diametr_of_fasteners = input("\nВведите диаметр: ")
 
-    get_diameter = dic_fine_pitch_fasteners.get(diametr_of_fasteners)
-    #print ("print 4 "+ str(dic_fine_pitch_fasteners.get("4")))
-    #print ("print input get_diameter " + str(get_diameter))
-    if get_diameter == None:
+    get_thread_pitch = dic_fine_pitch_fasteners.get(diametr_of_fasteners)
+    convert_to_list_of_thread_pitch = list(get_thread_pitch.split(","))
+
+    if get_thread_pitch == None:
         print (str(diametr_of_fasteners) + " - неправильный или не стандартный размер")
+
     else:
-        print ("Шаг резьбы: " + str(get_diameter) + "\n")
+        print ("")
+        count_of_thread_pitch = list(get_thread_pitch.split(", "))
+        len_of_thread_pitch = (len(count_of_thread_pitch))-1
+        if len_of_thread_pitch == 0:
+            print(" " + str(convert_to_list_of_thread_pitch[0]) + " - стандартная резьба\n")
+        elif len_of_thread_pitch == 1:
+            print (" " + str(convert_to_list_of_thread_pitch[0]) + "- стандартная резьба\n" + str(convert_to_list_of_thread_pitch[1]) + " - мелкая резьба №1\n")
+        elif len_of_thread_pitch == 2:
+            print (" " + str(convert_to_list_of_thread_pitch[0]) + "- стандартная резьба\n" + str(convert_to_list_of_thread_pitch[1]) + " - мелкая резьба №1\n" + str(convert_to_list_of_thread_pitch[2]) +"- мелкая резьба №2\n")
+        else:
+            print("Что-то пошло не так...")
 
 # МЕНЮ запуска скриптов + главное меню
 def start():
