@@ -402,29 +402,14 @@ def module_fine_pitch_fasteners():
     "24" : "3, 2",
     "27" : "3, 2, 1.5",
     "30" : "3.5, 2",
-    "33" : "3.5, 2",
+    "33" : "3.5, 2"
     "36" : "4, 3",
     "39" : "4, 3",
     "42" : "4.5, 3",
     "48" : "5, 3",
-    }
-    
-    show_all_keys = str(dic_fine_pitch_fasteners.keys())
-    replace_trash = show_all_keys.replace("'", "")
-    # replace_trash = replace_trash.replace()
-    # replace_trash = list(replace_trash.split(","))
-    replace_trash = replace_trash.replace("dict_keys([", "Доступные диаметры: \n")
-    replace_trash = replace_trash.replace("])", "")
-    print (replace_trash)
-    diametr_of_fasteners = input("\nВведите диаметр: ")
 
-    get_diameter = dic_fine_pitch_fasteners.get(diametr_of_fasteners)
-    #print ("print 4 "+ str(dic_fine_pitch_fasteners.get("4")))
-    #print ("print input get_diameter " + str(get_diameter))
-    if get_diameter == None:
-        print (str(diametr_of_fasteners) + " - неправильный или не стандартный размер")
-    else:
-        print ("Шаг резьбы: " + str(get_diameter) + "\n")
+    }
+    pass
 
 # МЕНЮ запуска скриптов + главное меню
 def start():
@@ -436,8 +421,8 @@ def start():
     2: (Не активный)Просчет размеров для HV крепежа\n\
     3: (Не активный)Расчет веса метизов\n\
     4: (Не активный)Расчет количества химанкера\n\
-    5: Поиск артикула Metalvis по известному DIN/ISO\n\
-    6: Шаг резьбы для метрики\n\
+    5: Поиск артикула Metalvis по известному DIN\n\
+    6: Шаг резьбы\n\
     е: Выйти из программы\n\
     admin: Администрирование базы")
 
@@ -452,8 +437,7 @@ def start():
         os.system('clear')
         line()
         module_din_in_metalvis_id()
-
-    elif module_start == "6":
+    elif module_start == "6"
         os.system('clear')
         line()
         module_fine_pitch_fasteners()
