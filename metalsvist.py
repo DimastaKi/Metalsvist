@@ -21,7 +21,7 @@ import shutil
      # TODO: сделать расчет химанкера
 
      # МОДУЛЬ 5:
-     # сделать список с мш
+     # V сделать список с мш
 
      # МОДУЛЬ ADMIN:
      # через перезапись сделать возможность добавление пар в словарь dic_din_in_metalvis
@@ -300,15 +300,15 @@ def module_din_in_metalvis_id():
     # проверяет есть ли ошибка в названии и выводит сообщение
     try:
         b = a[find_din]
-        print ("\n" + str(find_din) + "- Metalvis ID: " + str(b) + "\n")
+        print ("\n" + str(find_din) + " - Группа товара: " + str(b) + "\n")
         open_dict.close()
     except KeyError:
         try:
             b = a[find_iso]
-            print ("\n" + str(find_iso) + "- Metalvis ID: " + str(b) + "\n")
+            print ("\n" + str(find_iso) + " - Группа товара: " + str(b) + "\n")
             open_dict.close()
         except KeyError:
-            print ("Введеный DIN/ISO: " + str(input_standart) + ". Нет в базе Metalvis\n")
+            print ("\nВведеный DIN/ISO: " + str(input_standart) + ".\nНет в базе Metalvis или ошибка написания\n")
             open_dict.close()
 
 def module_admin():
@@ -385,7 +385,8 @@ def module_admin():
             module_admin()
     else:
         start()
-# Module 5
+
+# Module 5 - справочник по мелкому шагу для метрики
 def module_fine_pitch_fasteners():
     dic_fine_pitch_fasteners = {
     "4" : "0.7",
@@ -409,32 +410,35 @@ def module_fine_pitch_fasteners():
     "48" : "5, 3",
     }
     
+    # Вывод всего списка ключей словаря и его очистка от мусора
     show_all_keys = str(dic_fine_pitch_fasteners.keys())
     replace_trash = show_all_keys.replace("'", "")
-    # replace_trash = replace_trash.replace()
-    # replace_trash = list(replace_trash.split(","))
     replace_trash = replace_trash.replace("dict_keys([", "Доступные диаметры: \n")
     replace_trash = replace_trash.replace("])", "")
     print (replace_trash)
 
+    # запрос на ввод ключа-диаметра и перевод полученного словаря в список, удаление лишних пробелов
     diametr_of_fasteners = input("\nВведите диаметр: ")
-
     get_thread_pitch = dic_fine_pitch_fasteners.get(diametr_of_fasteners)
-    convert_to_list_of_thread_pitch = list(get_thread_pitch.split(","))
+    get_thread_pitch = get_thread_pitch.replace(" ","")
 
+    # если введеного диаметра нет в списке ключей - беда, иначе - вывод списка ШР с комментариями
     if get_thread_pitch == None:
         print (str(diametr_of_fasteners) + " - неправильный или не стандартный размер")
-
     else:
+        convert_to_list_of_thread_pitch = list(get_thread_pitch.split(","))
         print ("")
-        count_of_thread_pitch = list(get_thread_pitch.split(", "))
+        count_of_thread_pitch = list(get_thread_pitch.split(","))
         len_of_thread_pitch = (len(count_of_thread_pitch))-1
         if len_of_thread_pitch == 0:
-            print(" " + str(convert_to_list_of_thread_pitch[0]) + " - стандартная резьба\n")
+            print(str(convert_to_list_of_thread_pitch[0]) + " - стандартная резьба\n")
         elif len_of_thread_pitch == 1:
-            print (" " + str(convert_to_list_of_thread_pitch[0]) + "- стандартная резьба\n" + str(convert_to_list_of_thread_pitch[1]) + " - мелкая резьба №1\n")
+            print (str(convert_to_list_of_thread_pitch[0]) + " - стандартная резьба")
+            print (str(convert_to_list_of_thread_pitch[1]) + " - мелкая резьба №1\n")
         elif len_of_thread_pitch == 2:
-            print (" " + str(convert_to_list_of_thread_pitch[0]) + "- стандартная резьба\n" + str(convert_to_list_of_thread_pitch[1]) + " - мелкая резьба №1\n" + str(convert_to_list_of_thread_pitch[2]) +"- мелкая резьба №2\n")
+            print (str(convert_to_list_of_thread_pitch[0]) + " - стандартная резьба")
+            print (str(convert_to_list_of_thread_pitch[1]) + " - мелкая резьба №1")
+            print (str(convert_to_list_of_thread_pitch[2]) + " - мелкая резьба №2\n")
         else:
             print("Что-то пошло не так...")
 
@@ -443,13 +447,13 @@ def start():
     module_test()
 
     line()
-    print ("\nВыбери раздел:\n\
+    print ("\nДоступные разделы справочника:\n\
     1: Преобразование ГОСТа в DIN\n\
     2: (Не активный)Просчет размеров для HV крепежа\n\
     3: (Не активный)Расчет веса метизов\n\
     4: (Не активный)Расчет количества химанкера\n\
     5: Поиск артикула Metalvis по известному DIN/ISO\n\
-    6: Шаг резьбы для метрики\n\
+    6: Справочник по мелкому шагу для метрики\n\n\
     е: Выйти из программы\n\
     admin: Администрирование базы")
 
