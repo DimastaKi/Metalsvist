@@ -420,14 +420,16 @@ def module_fine_pitch_fasteners():
     # запрос на ввод ключа-диаметра и перевод полученного словаря в список, удаление лишних пробелов
     diametr_of_fasteners = input("\nВведите диаметр: ")
     get_thread_pitch = dic_fine_pitch_fasteners.get(diametr_of_fasteners)
-    get_thread_pitch = get_thread_pitch.replace(" ","")
+    
 
     # если введеного диаметра нет в списке ключей - беда, иначе - вывод списка ШР с комментариями
     if get_thread_pitch == None:
         print (str(diametr_of_fasteners) + " - неправильный или не стандартный размер")
     else:
+        get_thread_pitch = get_thread_pitch.replace(" ","")
         convert_to_list_of_thread_pitch = list(get_thread_pitch.split(","))
         print ("")
+        
         count_of_thread_pitch = list(get_thread_pitch.split(","))
         len_of_thread_pitch = (len(count_of_thread_pitch))-1
         if len_of_thread_pitch == 0:
